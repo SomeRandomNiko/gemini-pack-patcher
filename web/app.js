@@ -1,7 +1,7 @@
 // UI for the patcher. All firmware processing happens in worker.js.
 
 // Shown in the footer once the repository is public.
-const REPO_URL = "";
+const REPO_URL = "https://github.com/SomeRandomNiko/gemini-pack-patcher";
 
 const $ = (id) => document.getElementById(id);
 const worker = new Worker(new URL("worker.js", import.meta.url), { type: "module" });
