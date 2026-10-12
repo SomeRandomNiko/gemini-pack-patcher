@@ -1,10 +1,11 @@
 # Cloudflare Workers static assets: serves the built web app from dist/.
 # Build first with ./scripts/build-web.sh, then `npx wrangler deploy`.
+#
+# The custom domain gemini-pack-patcher.lashni.dev is attached to this Worker in the
+# Cloudflare dashboard (not here), so the deploy token only needs access to the Worker.
 name = "gemini-pack-patcher"
 compatibility_date = "2026-10-01"
 workers_dev = false
-
-routes = [{ pattern = "gemini-pack-patcher.lashni.dev", custom_domain = true }]
 
 [assets]
 directory = "./dist"
