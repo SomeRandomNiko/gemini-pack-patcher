@@ -1,0 +1,343 @@
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #1b1f24;
+  --muted: #5d6673;
+  --border: #d9dee5;
+  --accent: #1f6feb;
+  --accent-text: #ffffff;
+  --ok: #1a7f37;
+  --ok-bg: #e9f6ec;
+  --bad: #c62828;
+  --bad-bg: #fdecea;
+  --warn: #8a5a00;
+  --warn-bg: #fff6dd;
+  --radius: 10px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1216;
+    --surface: #171b21;
+    --text: #e6e9ee;
+    --muted: #9aa4b2;
+    --border: #2b323c;
+    --accent: #4c8dff;
+    --accent-text: #0b0d10;
+    --ok: #56d364;
+    --ok-bg: #12261a;
+    --bad: #ff7b72;
+    --bad-bg: #2d1414;
+    --warn: #e3b341;
+    --warn-bg: #2a2210;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1216;
+  --surface: #171b21;
+  --text: #e6e9ee;
+  --muted: #9aa4b2;
+  --border: #2b323c;
+  --accent: #4c8dff;
+  --accent-text: #0b0d10;
+  --ok: #56d364;
+  --ok-bg: #12261a;
+  --bad: #ff7b72;
+  --bad-bg: #2d1414;
+  --warn: #e3b341;
+  --warn-bg: #2a2210;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 1.9rem;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+}
+
+h3 {
+  margin: 24px 0 8px;
+  font-size: 1rem;
+}
+
+.lede {
+  margin: 0 0 24px;
+  color: var(--muted);
+}
+
+.num {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 0.9rem;
+}
+
+.step {
+  margin: 0 0 16px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.step[hidden] {
+  display: none;
+}
+
+a {
+  color: var(--accent);
+}
+
+code,
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.85rem;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.versions {
+  padding-left: 20px;
+}
+
+.versions a {
+  white-space: nowrap;
+}
+
+.drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 28px 16px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+}
+
+.drop:hover,
+.drop.over {
+  border-color: var(--accent);
+}
+
+.drop input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.drop:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.drop-title {
+  font-weight: 600;
+}
+
+.ident {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.ident.ok {
+  background: var(--ok-bg);
+  border-color: var(--ok);
+}
+
+.ident.bad {
+  background: var(--bad-bg);
+  border-color: var(--bad);
+}
+
+.patch {
+  margin: 0 0 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.patch-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.patch-head input {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.patch p {
+  margin: 6px 0 0 28px;
+}
+
+.warning {
+  color: var(--warn);
+  background: var(--warn-bg);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.params {
+  margin: 10px 0 0 28px;
+}
+
+.param {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.param input {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  max-width: 360px;
+}
+
+.param-error {
+  color: var(--bad);
+  font-size: 0.85rem;
+  min-height: 1em;
+}
+
+button.primary,
+a.button {
+  display: inline-block;
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+a.button[hidden] {
+  display: none;
+}
+
+.progress {
+  margin-top: 14px;
+}
+
+.bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+#bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.2s;
+}
+
+.error {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.checks {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+}
+
+.checks li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  column-gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.checks .muted {
+  grid-column: 2;
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+
+.checks .pass .mark {
+  color: var(--ok);
+}
+
+.checks .fail .mark {
+  color: var(--bad);
+}
+
+.steps li {
+  margin-bottom: 6px;
+}
+
+footer {
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}

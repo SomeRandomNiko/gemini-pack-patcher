@@ -1,0 +1,13 @@
+/target
+/dist
+/.wrangler
+node_modules/
+
+# Never commit firmware or anything extracted from it.
+*.BIN
+*.bin
+*.zip
+*.img
+*.sqfs
+/parts/
+/patched/

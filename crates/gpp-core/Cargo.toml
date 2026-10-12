@@ -1,0 +1,15 @@
+[package]
+name = "gpp-core"
+description = "Firmware pack parsing, SquashFS rewriting and patch engine for gemini-pack-patcher"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+crc32fast = "1"
+hex = "0.4"
+lzokay-native = { version = "0.1", default-features = false, features = ["compress"] }
+md-5 = "0.10"
+serde = { version = "1", features = ["derive"] }
+sha2 = "0.10"
+toml = { version = "0.9", default-features = false, features = ["parse", "serde", "std"] }

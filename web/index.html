@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GEMINI Pack Patcher</title>
+  <meta name="description" content="Patch stock GEMINI_PACK.BIN head unit firmware in your browser: keep Android Auto running after ignition off, custom Wi-Fi and Bluetooth names.">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>GEMINI Pack Patcher</h1>
+      <p class="lede">Apply community patches to the stock firmware of GEMINI_PACK-based head units, such as the <a href="https://it.aliexpress.com/item/1005004428235119.html" rel="noreferrer">Roadtop CarPlay / Android Auto unit for Audi</a>. Everything runs in this browser tab: your firmware file is never uploaded.</p>
+    </header>
+
+    <section class="step" id="step-file">
+      <h2><span class="num">1</span> Stock firmware</h2>
+      <p>Use the original, unmodified <code>GEMINI_PACK.BIN</code>. Supported versions:</p>
+      <ul id="versions" class="versions"><li class="muted">Loading…</li></ul>
+      <p class="hint">The vendor server only offers plain HTTP, so your browser may warn about an “insecure download”. That is expected: this tool checks the file’s SHA-256 and rejects anything that is not the exact original.</p>
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept=".bin,.BIN">
+        <span class="drop-title">Drop GEMINI_PACK.BIN here</span>
+        <span class="muted">or click to choose a file</span>
+      </label>
+      <div id="ident" class="ident" hidden></div>
+    </section>
+
+    <section class="step" id="step-patches" hidden>
+      <h2><span class="num">2</span> Choose patches</h2>
+      <form id="patches" novalidate></form>
+    </section>
+
+    <section class="step" id="step-apply" hidden>
+      <h2><span class="num">3</span> Build</h2>
+      <button id="apply" type="button" class="primary" disabled>Apply selected patches</button>
+      <div id="progress" class="progress" hidden>
+        <div class="bar"><div id="bar-fill"></div></div>
+        <span id="stage" class="muted"></span>
+      </div>
+      <div id="error" class="error" role="alert" hidden></div>
+    </section>
+
+    <section class="step" id="step-result" hidden>
+      <h2><span class="num">4</span> Check &amp; flash</h2>
+      <p id="summary"></p>
+      <ul id="checks" class="checks"></ul>
+      <a id="download" class="primary button" download="GEMINI_PACK.BIN">Download GEMINI_PACK.BIN</a>
+      <h3>Flashing</h3>
+      <ol class="steps">
+        <li>Copy the file to the root of a FAT32-formatted USB stick. The name must be exactly <code>GEMINI_PACK.BIN</code>.</li>
+        <li>Plug the stick into the head unit and open the decoder settings page → <em>System update</em> (password <code>8032</code>) → <em>USB</em>.</li>
+        <li>Keep the unit powered until the update has finished; do not remove the stick or switch off the car meanwhile.</li>
+      </ol>
+      <p class="hint">If the unit reports “no ISPBOOOT.BIN here!”, stop: nothing was flashed. After the first boot the new Wi-Fi/Bluetooth name may only appear after one more ignition cycle, and your phone may need to pair again.</p>
+      <p class="hint">To undo the patches, flash the original stock <code>GEMINI_PACK.BIN</code> the same way.</p>
+    </section>
+
+    <footer>
+      <p><strong>Use at your own risk.</strong> Modified firmware may void your warranty. A failed or interrupted update can leave the unit unusable. This project is not affiliated with the head unit’s manufacturer or vendor and does not distribute their firmware.</p>
+      <p id="repo-line" hidden>Source code, research notes and issue tracker: <a id="repo-link" href="#"></a></p>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# Cloudflare Workers static assets: serves the built web app from dist/.
+# Build first with ./scripts/build-web.sh, then `npx wrangler deploy`.
+name = "gemini-pack-patcher"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./dist"
+
+# Custom domain, once decided:
+# routes = [{ pattern = "patcher.example.com", custom_domain = true }]

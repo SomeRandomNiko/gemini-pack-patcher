@@ -1,0 +1,183 @@
+# Stock OTA firmware AR560R4 for the "ltau_n" (Audi, 8368 platform) head unit,
+# e.g. the Roadtop CarPlay / Android Auto unit for Audi: https://it.aliexpress.com/item/1005004428235119.html
+# Format: docs/firmware-definitions.md
+
+id = "ltau_n-AR560R4"
+name = "ltau_n AR560R4 (OTA)"
+description = "Roadtop unit for Audi, stock over-the-air update AR560R4, published 2026-09-03."
+sha256 = "3ef37f8e1f993611e091a8941f28464bc194481c86d6d02664ae5bf7ba9c9223"
+size = 85555200
+download_url = "http://180.188.197.47/OTASystemUpdate/8368xu/GEMINI_PACK_File_Update/AODI/ltau_n/ltau_n-AR560R4/GEMINI_PACK.BIN"
+update_index = "http://180.188.197.47/OTASystemUpdate/8368xu/GEMINI_PACK_File_Update/AODI/ltau_n/"
+
+# Writes /media/flash/userdata/devConfig at boot. With the name patches applied, the
+# Wi-Fi / Bluetooth code reads WifiName / BtName from it and falls back to the stock
+# "Car"+MAC name for any key that is missing or empty.
+[[components.devconfig.action]]
+type = "add_file"
+partition = "spapp"
+path = "bin/devname.sh"
+mode = 0o755
+content = '''
+#!/bin/sh
+# Writes the custom Wi-Fi / Bluetooth name read by wifiBtConfig (WifiName / BtName).
+F=/media/flash/userdata/devConfig
+C='{{collect:devconfig}}'
+i=0
+while [ ! -d /media/flash/userdata ] && [ $i -lt 20 ]; do sleep 1; i=$((i + 1)); done
+if [ "$(cat "$F" 2>/dev/null)" != "$C" ]; then
+	printf '%s\n' "$C" > "$F.tmp" && mv "$F.tmp" "$F" && sync
+fi
+'''
+
+[[components.devconfig.action]]
+type = "replace_text"
+partition = "spapp"
+file = "appinfo.rc"
+find = '''
+service mcusrv /application/bin/mcusrv 3 115200
+    console
+'''
+replace = '''
+service mcusrv /application/bin/mcusrv 3 115200
+    console
+
+service devname /bin/sh /application/bin/devname.sh
+    console
+    oneshot
+'''
+
+[[components.devconfig.action]]
+type = "replace_text"
+partition = "spapp"
+file = "appinfo.rc"
+find = '''
+on property:ro.start.Launcher=1
+   start mcusrv
+'''
+replace = '''
+on property:ro.start.Launcher=1
+   start devname
+   start mcusrv
+'''
+
+[[components.devconfig.action]]
+type = "replace_text"
+partition = "spapp"
+file = "appinfo.rc"
+find = '''
+on property:ro.start.ncLauncher=1
+   start mcusrv
+'''
+replace = '''
+on property:ro.start.ncLauncher=1
+   start devname
+   start mcusrv
+'''
+
+[[components.devconfig.action]]
+type = "replace_text"
+partition = "spapp"
+file = "appinfo.rc"
+find = '''
+on property:ro.start.tdLauncher=1
+   start mcusrv
+'''
+replace = '''
+on property:ro.start.tdLauncher=1
+   start devname
+   start mcusrv
+'''
+
+[[patch]]
+id = "aa-keep-alive"
+title = "Keep Android Auto running when the ignition is switched off"
+description = """
+Stock firmware ends the Android Auto session (and Bluetooth/Wi-Fi to the phone) as soon as \
+the ignition (ACC) turns off. With this patch the session keeps running after the engine is \
+switched off. The unit still powers down as before when you leave the car (door opened or \
+the car's CAN bus goes to sleep)."""
+warning = "The head unit stays powered while Android Auto is connected, which uses the car battery."
+
+[[patch.action]]
+type = "byte_patch"
+partition = "spapp"
+file = "lib/libappframework.so.1.0.0"
+offset = 0x5013c
+expect = "d8f76eed"
+replace = "00bf00bf"
+note = "NOP the call to connectAcconoff (blx -> 2x nop.n)"
+
+[[patch]]
+id = "wifi-name"
+title = "Custom Wi-Fi name"
+description = "Replace the stock \"Car\" + MAC address Wi-Fi network name (used by wireless Android Auto) with your own."
+requires = ["devconfig"]
+
+[[patch.param]]
+id = "name"
+label = "Wi-Fi name"
+help = "Up to 32 characters: ASCII letters, digits, spaces and basic punctuation."
+placeholder = "My Car"
+max_bytes = 32
+ascii_only = true
+forbidden_chars = '''='"\$`'''
+
+[[patch.contribute]]
+collection = "devconfig"
+value = "WifiName={{name}}"
+
+[[patch.action]]
+type = "byte_patch"
+partition = "spapp"
+file = "lib/libapis.so.1.0.0"
+offset = 0x91a74
+expect = "2eb9"
+replace = "05e0"
+note = "PlatformControlPrivate::getPlatformMacName: always read devConfig WifiName (cbnz -> b)"
+
+[[patch.action]]
+type = "byte_patch"
+partition = "spapp"
+file = "lib/libapis.so.1.0.0"
+offset = 0xb7504
+expect = "34d0"
+replace = "00bf"
+note = "WifiControlPrivate::initAccessoryName: always read devConfig WifiName (beq -> nop)"
+
+[[patch]]
+id = "bt-name"
+title = "Custom Bluetooth name"
+description = "Replace the stock \"Car\" + MAC address Bluetooth name with your own."
+requires = ["devconfig"]
+
+[[patch.param]]
+id = "name"
+label = "Bluetooth name"
+help = "Up to 32 characters: ASCII letters, digits, spaces and basic punctuation."
+placeholder = "My Car"
+max_bytes = 32
+ascii_only = true
+forbidden_chars = '''='"\$`'''
+
+[[patch.contribute]]
+collection = "devconfig"
+value = "BtName={{name}}"
+
+[[patch.action]]
+type = "byte_patch"
+partition = "spapp"
+file = "lib/libapis.so.1.0.0"
+offset = 0x91e50
+expect = "2eb9"
+replace = "05e0"
+note = "PlatformControlPrivate::getBtPlatformMacName: always read devConfig BtName (cbnz -> b)"
+
+[[patch.action]]
+type = "byte_patch"
+partition = "spapp"
+file = "lib/module/libandroidautomodule.so"
+offset = 0x36522
+expect = "67b3"
+replace = "00bf"
+note = "AABTSrvCbk::BTSrv_ServiceCBK: always read devConfig BtName (cbz -> nop)"
