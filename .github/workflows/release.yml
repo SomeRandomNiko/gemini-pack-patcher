@@ -17,7 +17,7 @@ jobs:
           - { os: macos-latest, target: aarch64-apple-darwin, exe: gpp }
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo build --release -p gpp-cli --target ${{ matrix.target }}
       - shell: bash
@@ -25,6 +25,6 @@ jobs:
           mkdir out
           cp target/${{ matrix.target }}/release/${{ matrix.exe }} out/
           cd out && tar czf ../gpp-${{ github.ref_name }}-${{ matrix.target }}.tar.gz ${{ matrix.exe }}
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: gpp-*.tar.gz
