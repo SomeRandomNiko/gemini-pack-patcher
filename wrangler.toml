@@ -2,9 +2,9 @@
 # Build first with ./scripts/build-web.sh, then `npx wrangler deploy`.
 name = "gemini-pack-patcher"
 compatibility_date = "2026-10-01"
+workers_dev = false
+
+routes = [{ pattern = "gemini-pack-patcher.lashni.dev", custom_domain = true }]
 
 [assets]
 directory = "./dist"
-
-# Custom domain, once decided:
-# routes = [{ pattern = "patcher.example.com", custom_domain = true }]

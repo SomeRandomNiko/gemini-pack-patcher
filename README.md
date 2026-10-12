@@ -96,7 +96,8 @@ GPP_STOCK=/path/to/stock/GEMINI_PACK.BIN cargo test --release
 
 ### Deploying
 
-The web app is a static site. `wrangler.toml` serves `dist/` with Cloudflare Workers
+The web app is a static site, hosted at https://gemini-pack-patcher.lashni.dev.
+`wrangler.toml` serves `dist/` with Cloudflare Workers
 static assets; `.github/workflows/deploy.yml` builds and deploys on every push to `main`
 once the repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` and the
 repository variable `DEPLOY_ENABLED=true` are set. `web/_headers` sets a strict
